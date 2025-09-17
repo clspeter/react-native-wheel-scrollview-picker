@@ -79,7 +79,7 @@ const ScrollPicker: { <ItemT extends string | number>(props: ScrollPickerProps<I
   const sView = useRef<ScrollView>(null);
   const [isScrollTo, setIsScrollTo] = useState(false);
   const [dragStarted, setDragStarted] = useState(false);
-  const [momentumStarted, setMomentumStarted] = useState(false);
+  const momentumStarted = useRef(false);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
   useImperativeHandle(ref, () => ({
@@ -203,12 +203,12 @@ const ScrollPicker: { <ItemT extends string | number>(props: ScrollPickerProps<I
     );
   };
   const onMomentumScrollBegin = () => {
-    setMomentumStarted(true);
+    momentumStarted.current = true;
     timer && clearTimeout(timer);
   };
 
   const onMomentumScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setMomentumStarted(false);
+    momentumStarted.current = false;
 
     if (!isScrollTo && !dragStarted) {
       scrollFix(e);
